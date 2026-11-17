@@ -9,10 +9,11 @@ import { PROVIDER_INFO } from "@/types";
 
 interface UploadPanelProps {
   onConvert: (file: File, provider: ProviderId, quality: QualityTier) => void;
+  onLoadModel: (file: File) => void;
   busy: boolean;
 }
 
-export function UploadPanel({ onConvert, busy }: UploadPanelProps) {
+export function UploadPanel({ onConvert, onLoadModel, busy }: UploadPanelProps) {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [provider, setProvider] = useState<ProviderId>("meshy");
@@ -120,6 +121,25 @@ export function UploadPanel({ onConvert, busy }: UploadPanelProps) {
           مسح
         </button>
       )}
+
+      <div className="arch-divider" />
+      <div className="label">تحميل نموذج 3D (مجاني)</div>
+      <label className="btn text-xs cursor-pointer">
+        📂 اختر ملف GLB/OBJ
+        <input
+          type="file"
+          accept=".glb,.gltf,.obj"
+          className="hidden"
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) onLoadModel(f);
+            e.target.value = "";
+          }}
+        />
+      </label>
+      <div className="text-[10px] text-[var(--text-3)]">
+        ولّد مجاناً على: Hi3D (hi3d.pro) · 3D AI Studio (3daistudio.pro) · 3D Valley (3dvalley.com) — ثم حمّل GLB هنا للتحرير/التصدير.
+      </div>
     </div>
   );
 }

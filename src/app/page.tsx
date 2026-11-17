@@ -138,6 +138,24 @@ export default function Home() {
     setScene(s);
   }, []);
 
+  const handleLoadModel = useCallback((file: File) => {
+    setError(null);
+    const url = URL.createObjectURL(file);
+    const job: ConversionJob = {
+      id: newJobId(),
+      provider: "demo",
+      status: "succeeded",
+      progress: 100,
+      createdAt: Date.now(),
+      imageName: file.name,
+      imagePreview: undefined,
+      modelUrl: url,
+      modelUrls: { glb: url },
+    };
+    addJob(job);
+    setActiveJob(job.id);
+  }, [addJob, setActiveJob]);
+
   const viewerUrl = activeJob?.modelUrl ? proxyUrl(activeJob.modelUrl) : null;
 
   const statusLabel = (s: string) => {
@@ -204,7 +222,7 @@ export default function Home() {
           <div className="card p-4 flex flex-col gap-3 min-h-0 overflow-auto pattern-khatam">
             <div className="label">رفع الصورة</div>
             <div className="arch-divider" />
-            <UploadPanel onConvert={handleConvert} busy={busy} />
+            <UploadPanel onConvert={handleConvert} onLoadModel={handleLoadModel} busy={busy} />
           </div>
           <div className="card p-4 flex-1 min-h-0 overflow-auto">
             <div className="label mb-2">السجل</div>
