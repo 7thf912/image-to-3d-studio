@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Image to 3D Studio
 
-## Getting Started
+A professional web application that converts a single image into a textured 3D model using AI, with in-browser editing and multi-quality, multi-format export.
 
-First, run the development server:
+## Features
+
+- **Image → 3D** via Meshy AI (primary) or Tripo AI, plus a key-free Demo mode (Damaged Helmet sample).
+- **Multi-quality export**: Low / Medium / High / Ultra, with client-side mesh decimation for the lower tiers.
+- **Multi-format export**: GLB, glTF, OBJ, STL, USDZ (+ provider originals: FBX, USDZ, …).
+- **In-browser editor**: transform (position/rotation/scale), material override (color, metalness, roughness, wireframe, flat shading), lighting, background, grid/axes.
+- **Job history** persisted locally.
+- **Settings** for API keys and defaults (stored in your browser only).
+
+## Getting started
 
 ```bash
+cd image-to-3d-studio
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Using a real provider
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Open **Settings** (⚙) and paste your API key.
+   - Meshy: https://www.meshy.ai/settings/api
+   - Tripo: https://platform.tripo3d.ai/
+2. Upload an image, pick the provider and quality, click **Convert to 3D**.
+3. Wait for completion (Meshy usually 1–3 min). The model appears in the viewer.
+4. Edit, then export in the quality/format you want.
 
-## Learn More
+Demo mode works without any key.
 
-To learn more about Next.js, take a look at the following resources:
+## Build for production
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run build
+npm start
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Notes
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- API keys are kept in your browser (localStorage) and sent to the local Next.js server only to proxy provider requests. They are never stored on the server.
+- Meshy free plan cannot create tasks; a paid plan is required for real generation.
+- Client-side decimation uses meshoptimizer (MeshoptSimplifier) and requires the model to be loaded in the viewer first for edited exports; otherwise the export fetches the model fresh.
